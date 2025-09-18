@@ -1,9 +1,9 @@
 <html>
 <head>
-<meta charset="utf-8">
-
+  <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
+  <title>Lab 2 for Web GIS</title>
+  <style>
 html { height:100% }
 body { height:100%; margin:0; padding:0 }
 #map_canvas { height:60vh; width:100% }
@@ -12,54 +12,51 @@ body { height:100%; margin:0; padding:0 }
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5U-lTv1hoJo_-ON8qVBXtEGXfZI80S7k">
 </script>
 <script>
-function initialize()
-{
-var latlng = new google.maps.LatLng(35.306840, -80.73200);
-var myOptions = {
-zoom: 16,
-center: latlng,
-mapTypeId: google.maps.MapTypeId.HYBRID
-};
-new google.maps.Map(document.getElementById("map_canvas"),
-myOptions);
+function initialize(){
+  var latlng = new google.maps.LatLng(35.306840, -80.73200);
+  var myOptions = {
+  zoom: 16,
+  center: latlng,
+  mapTypeId: google.maps.MapTypeId.HYBRID};
+  new google.maps.Map(document.getElementById("map_canvas"),  myOptions);
 }
 </script>
   
-<title>Lab 2 for Web GIS</title>
 </head>
 <<body onload="initialize()">
 <h1>Lab 2 for Web GIS</h1>
 <h3>Name: Austin</h3>
+  <!-- Comments-->
 <h3>Current Date is: </h3>
 <script type="text/javascript">
-document.write(Date());
+  document.write(Date());
 </script>
 <h3>Generate a random number: </h3>
 <script type="text/javascript">
-document.write(Math.random());
+ document.write(Math.random());
 </script>
 
 <h3>Define variables and perform calculation: </h3>
 <script type="text/javascript">
 var str1="Hello World";
 document.write(str1);
+
+document.write("<br>");
 var x=5;
-document.write(x);
-document.write("<br> ");
 var y=10;
 var z=x+y;
-document.write(z);
-document.write("<br> ");
+document.write("x + y =" + z);
+document.write("<br><br>");
 </script>
-<h3>Define a function </h3>
-<script type="text/javascript">
-function sum3(x1,x2,x3)
-{
-var sum=x1+x2+x3;
-return sum;
-}
+
+<h3>Define a function (sum of three numbers): </h3>
+<script>
+function sum3(x1,x2,x3){
+  var sum=x1+x2+x3;
+  return sum;
+ }
 var k=sum3(5,6,7);
-document.write(k);
+document.write("sum3(12,20,30)=" + sum3(10,20,30));
 </script>
 
 <h3>Interactive Map (Google Maps)</h3>
