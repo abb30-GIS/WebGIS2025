@@ -25,9 +25,7 @@ function initialize(){
   mapTypeId: google.maps.MapTypeId.HYBRID};
   new google.maps.Map(document.getElementById("map_canvas"),  myOptions);
 }
-</script>
 
-<script>
 function initialize_matthews(){
   var latlng = new google.maps.LatLng(35.11478, -80.71985);
   var myOptions = {
@@ -36,9 +34,7 @@ function initialize_matthews(){
   mapTypeId: google.maps.MapTypeId.HYBRID};
   new google.maps.Map(document.getElementById("map_matthews"),  myOptions);
 }
-</script>
 
-<script>
 function initialize_oakisland(){
   var latlng = new google.maps.LatLng(33.91928, -78.16070);
   var myOptions = {
@@ -47,9 +43,7 @@ function initialize_oakisland(){
   mapTypeId: google.maps.MapTypeId.HYBRID};
   new google.maps.Map(document.getElementById("map_oakisland"),  myOptions);
 }
-</script>
 
-<script>
 function initialize_lexington(){
   var latlng = new google.maps.LatLng(35.82500, -80.25444);
   var myOptions = {
@@ -58,9 +52,7 @@ function initialize_lexington(){
   mapTypeId: google.maps.MapTypeId.HYBRID};
   new google.maps.Map(document.getElementById("map_lexington"),  myOptions);
 }
-</script>
 
-<script>
 function initialize_myrtle(){
   var latlng = new google.maps.LatLng(33.69334, -78.88862);
   var myOptions = {
@@ -69,9 +61,7 @@ function initialize_myrtle(){
   mapTypeId: google.maps.MapTypeId.HYBRID};
   new google.maps.Map(document.getElementById("map_myrtle"),  myOptions);
 }
-</script>
 
-<script>
 function initialize_davao(){
   var latlng = new google.maps.LatLng(7.08594, 125.61283);
   var myOptions = {
@@ -83,12 +73,16 @@ function initialize_davao(){
 </script>  
   
 </head>
-<<body onload="initialize()">
-<<body onload="initialize_matthews()">
-<<body onload="initialize_lexington()">
-<<body onload="initialize_oakisland()">
-<<body onload="initialize_myrtle()">
-<<body onload="initialize_davao()">
+
+window.onload = function() {
+
+initialize()
+initialize_matthews()
+initialize_lexington()
+initialize_oakisland()
+initialize_myrtle()
+initialize_davao()
+}
 
 <h1>Lab 2 for Web GIS</h1>
 <h3>Name: Austin</h3>
@@ -131,6 +125,7 @@ document.write("sum3(12,20,30)=" + sum3(10,20,30));
   var Q_x3=x1+x2;
 document.write("The Value of x3 is " + Q_x3);
 </script>
+  
 <h3>Interactive Maps (Google Maps)</h3>
 <div id="map_canvas" style="width:50%; height:50%"></div>
 <h3>Matthews, NC (Google Maps)</h3>
