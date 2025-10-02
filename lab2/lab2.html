@@ -7,6 +7,11 @@
 html { height:100% }
 body { height:100%; margin:0; padding:0 }
 #map_canvas { height:60vh; width:100% }
+#map_matthews { height:60vh; width:100% }
+#map_lexington { height:60vh; width:100% }
+#map_oasisland { height:60vh; width:100% }
+#map_myrtle { height:60vh; width:100% }
+#map_davao { height:60vh; width:100% }       
 </style>
 <script 
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5U-lTv1hoJo_-ON8qVBXtEGXfZI80S7k">
@@ -24,8 +29,8 @@ function initialize(){
 
 <script>
 function initialize_matthews(){
-  var latlng1 = new google.maps.LatLng(35.11478, -80.71985);
-  var myOptions1 = {
+  var latlng = new google.maps.LatLng(35.11478, -80.71985);
+  var myOptions = {
   zoom: 12,
   center: latlng1,
   mapTypeId: google.maps.MapTypeId.HYBRID};
