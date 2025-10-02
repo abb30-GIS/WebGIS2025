@@ -26,7 +26,7 @@ function initialize(){
 function initialize_matthews(){
   var latlng = new google.maps.LatLng(35.11478, -80.71985);
   var myOptions = {
-  zoom: 16,
+  zoom: 12,
   center: latlng,
   mapTypeId: google.maps.MapTypeId.HYBRID};
   new google.maps.Map(document.getElementById("map_matthews"),  myOptions);
@@ -34,13 +34,13 @@ function initialize_matthews(){
 </script>
 
 <script>
-function initialize_churchland(){
-  var latlng = new google.maps.LatLng(35.78555, -80.41704);
+function initialize_oakisland(){
+  var latlng = new google.maps.LatLng(33.91928, -78.16070);
   var myOptions = {
-  zoom: 16,
+  zoom: 12,
   center: latlng,
   mapTypeId: google.maps.MapTypeId.HYBRID};
-  new google.maps.Map(document.getElementById("map_churchland"),  myOptions);
+  new google.maps.Map(document.getElementById("map_oakisland"),  myOptions);
 }
 </script>
 
@@ -48,7 +48,7 @@ function initialize_churchland(){
 function initialize_lexington(){
   var latlng = new google.maps.LatLng(35.82500, -80.25444);
   var myOptions = {
-  zoom: 16,
+  zoom: 13,
   center: latlng,
   mapTypeId: google.maps.MapTypeId.HYBRID};
   new google.maps.Map(document.getElementById("map_lexington"),  myOptions);
@@ -59,7 +59,7 @@ function initialize_lexington(){
 function initialize_myrtle(){
   var latlng = new google.maps.LatLng(33.69334, -78.88862);
   var myOptions = {
-  zoom: 16,
+  zoom: 12,
   center: latlng,
   mapTypeId: google.maps.MapTypeId.HYBRID};
   new google.maps.Map(document.getElementById("map_myrtle"),  myOptions);
@@ -70,7 +70,7 @@ function initialize_myrtle(){
 function initialize_davao(){
   var latlng = new google.maps.LatLng(7.08594, 125.61283);
   var myOptions = {
-  zoom: 16,
+  zoom: 11,
   center: latlng,
   mapTypeId: google.maps.MapTypeId.HYBRID};
   new google.maps.Map(document.getElementById("map_davao"),  myOptions);
@@ -120,12 +120,17 @@ document.write("sum3(12,20,30)=" + sum3(10,20,30));
   var Q_x3=x1+x2;
 document.write("The Value of x3 is " + Q_x3);
   </script>
-<h3>Interactive Map (Google Maps)</h3>
+<h3>Interactive Maps (Google Maps)</h3>
 <div id="map_canvas" style="width:50%; height:50%"></div>
+<h3>Matthews, NC (Google Maps)</h3>
 <div id="map_matthews" style="width:50%; height:50%"></div>
-<div id="map_churchland" style="width:50%; height:50%"></div>
+<h3>Oak Island, NC (Google Maps)</h3>
+<div id="map_oakisland" style="width:50%; height:50%"></div>
+<h3>Lexington, NC (Google Maps)</h3>
 <div id="map_lexington" style="width:50%; height:50%"></div>
+<h3>Myrtle Beach, SC (Google Maps)</h3>
 <div id="map_myrtle" style="width:50%; height:50%"></div>
+<h3>Davao City, Philippines (Google Maps)</h3>
 <div id="map_davao" style="width:50%; height:50%"></div>
 
 
