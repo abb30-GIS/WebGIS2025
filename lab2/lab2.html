@@ -21,6 +21,61 @@ function initialize(){
   new google.maps.Map(document.getElementById("map_canvas"),  myOptions);
 }
 </script>
+
+<script>
+function initialize_matthews(){
+  var latlng = new google.maps.LatLng(35.11478, -80.71985);
+  var myOptions = {
+  zoom: 16,
+  center: latlng,
+  mapTypeId: google.maps.MapTypeId.HYBRID};
+  new google.maps.Map(document.getElementById("map_matthews"),  myOptions);
+}
+</script>
+
+<script>
+function initialize_churchland(){
+  var latlng = new google.maps.LatLng(35.78555, -80.41704);
+  var myOptions = {
+  zoom: 16,
+  center: latlng,
+  mapTypeId: google.maps.MapTypeId.HYBRID};
+  new google.maps.Map(document.getElementById("map_churchland"),  myOptions);
+}
+</script>
+
+<script>
+function initialize_lexington(){
+  var latlng = new google.maps.LatLng(35.82500, -80.25444);
+  var myOptions = {
+  zoom: 16,
+  center: latlng,
+  mapTypeId: google.maps.MapTypeId.HYBRID};
+  new google.maps.Map(document.getElementById("map_lexington"),  myOptions);
+}
+</script>
+
+<script>
+function initialize_myrtle(){
+  var latlng = new google.maps.LatLng(33.69334, -78.88862);
+  var myOptions = {
+  zoom: 16,
+  center: latlng,
+  mapTypeId: google.maps.MapTypeId.HYBRID};
+  new google.maps.Map(document.getElementById("map_myrtle"),  myOptions);
+}
+</script>
+
+<script>
+function initialize_davao(){
+  var latlng = new google.maps.LatLng(7.08594, 125.61283);
+  var myOptions = {
+  zoom: 16,
+  center: latlng,
+  mapTypeId: google.maps.MapTypeId.HYBRID};
+  new google.maps.Map(document.getElementById("map_davao"),  myOptions);
+}
+</script>  
   
 </head>
 <<body onload="initialize()">
@@ -63,10 +118,17 @@ document.write("sum3(12,20,30)=" + sum3(10,20,30));
   var Q_x1=200;
   var Q_x2=300;
   var Q_x3=x1+x2;
-document.write("The Value of x3 is " + Q_x3)
+document.write("The Value of x3 is " + Q_x3);
   </script>
 <h3>Interactive Map (Google Maps)</h3>
 <div id="map_canvas" style="width:50%; height:50%"></div>
+<div id="map_matthews" style="width:50%; height:50%"></div>
+<div id="map_churchland" style="width:50%; height:50%"></div>
+<div id="map_lexington" style="width:50%; height:50%"></div>
+<div id="map_myrtle" style="width:50%; height:50%"></div>
+<div id="map_davao" style="width:50%; height:50%"></div>
+
+
   
 </body>
 </html>
