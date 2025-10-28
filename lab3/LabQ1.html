@@ -23,6 +23,9 @@ var map = new ol.Map({
  center: [-10997148, 4569099],
  zoom: 4
 });
+
+ });
+
 var ncExtent4269 = [-84.321869, 33.842316, -75.460621, 36.588117];
 var ncExtent3857 = ol.proj.transformExtent(ncExtent4269, 'EPSG:4269', 'EPSG:3857');
 map.getView().fit(ncExtent4269, {
@@ -32,10 +35,10 @@ map.getView().fit(ncExtent4269, {
 
   
  })
- });
-
-
   
 </script>
+
+
+ 
 </body>
 </html>
