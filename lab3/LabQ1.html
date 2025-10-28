@@ -19,15 +19,15 @@ var map = new ol.Map({
  layers: [OSM],
  target: 'map',
  view: new ol.View({
- projection: 'EPSG:3857',
-// center: [-10997148, 4569099],
- //zoom: 4
+ projection: 'EPSG:4269',
+ center: [-10997148, 4569099],
+ zoom: 4
  })
  });
 
 var ncExtent4269 = [-84.321869, 33.842316, -75.460621, 36.588117];
-var ncExtent3857 = ol.proj.transformExtent(ncExtent4269, 'EPSG:4269', 'EPSG:3857');
-map.getView().fit(ncExtent3857, {
+//var ncExtent3857 = ol.proj.transformExtent(ncExtent4269, 'EPSG:4269', 'EPSG:3857');
+map.getView().fit(ncExtent4269, {
  size: map.getSize(),
  padding: [20, 20, 20, 20],
  duration: 300
