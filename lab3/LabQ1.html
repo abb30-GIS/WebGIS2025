@@ -26,8 +26,8 @@ var map = new ol.Map({
  });
 
 var ncExtent = [-84.321869 , 33.842316 , -75.460621 , 36.588117 ];
-//var nycExtent3857 = ol.proj.transformExtent(nycExtent4326, 'EPSG:4326', 'EPSG:3857');
-map.getView().fit(ncExtent, {
+var nycExtent3857 = ol.proj.transformExtent(ncExtent, 'EPSG:4326', 'EPSG:3857');
+map.getView().fit(ncExtent3857, {
  size: map.getSize(),
  padding: [20, 20, 20, 20],
  duration: 300
