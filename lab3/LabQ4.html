@@ -48,9 +48,9 @@
   source: new ol.source.TileWMS({
      url: 'https://data.stategrowth.tas.gov.au/geoserver/ows',
      params: {
-       'LAYERS': 'topp: ssg:GEO_CARRIAGEWAY',
+       'LAYERS': 'ssg:GEO_CARRIAGEWAY',
        'TILED': true,
-       'FORMAT': 'image/png',
+       'FORMAT': 'Line Feature',
        'TRANSPARENT': true
        },
         serverType: 'geoserver',
@@ -63,9 +63,9 @@
   source: new ol.source.TileWMS({
      url: 'https://data.stategrowth.tas.gov.au/geoserver/ows',
      params: {
-       'LAYERS': 'topp: pam:GEO_CADASTRE',
+       'LAYERS': 'pam:GEO_CADASTRE',
        'TILED': true,
-       'FORMAT': 'image/png',
+       'FORMAT': 'Polygon Feature',
        'TRANSPARENT': true
        },
         serverType: 'geoserver',
@@ -78,9 +78,9 @@
   source: new ol.source.TileWMS({
      url: 'https://data.stategrowth.tas.gov.au/geoserver/ows',
      params: {
-       'LAYERS': 'topp: ssg:GEO_BRM_TRIP',
+       'LAYERS': 'ssg:GEO_BRM_TRIP',
        'TILED': true,
-       'FORMAT': 'image/png',
+       'FORMAT': 'Line Feature',
        'TRANSPARENT': true
        },
         serverType: 'geoserver',
@@ -99,8 +99,8 @@
   target: 'map',
   layers: [baseGroup, tasmaniaGroup],
   view: new ol.View({
-   center: [-10997148, 4569099],
-   zoom: 4
+   center: [-42.195680221689415, 146.55114161825236],
+   zoom: 6
   })
  });
   map.addControl(new ol.control.LayerSwitcher({ tipLabel: 'Legend' }));
