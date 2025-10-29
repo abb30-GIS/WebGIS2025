@@ -50,7 +50,7 @@
      params: {
        'LAYERS': 'ssg:GEO_CARRIAGEWAY',
        'TILED': true,
-       'FORMAT': 'Line Feature',
+       'FORMAT': 'image/png',
        'TRANSPARENT': true
        },
         serverType: 'geoserver',
@@ -65,7 +65,7 @@
      params: {
        'LAYERS': 'pam:GEO_CADASTRE',
        'TILED': true,
-       'FORMAT': 'Polygon Feature',
+       'FORMAT': 'polygon',
        'TRANSPARENT': true
        },
         serverType: 'geoserver',
@@ -80,7 +80,7 @@
      params: {
        'LAYERS': 'ssg:GEO_BRM_TRIP',
        'TILED': true,
-       'FORMAT': 'Line Feature',
+       'FORMAT': 'line',
        'TRANSPARENT': true
        },
         serverType: 'geoserver',
@@ -99,7 +99,7 @@
   target: 'map',
   layers: [baseGroup, tasmaniaGroup],
   view: new ol.View({
-   center: [-42.195680221689415, 146.55114161825236],
+   center: [-4219568, 14655114],
    zoom: 6
   })
  });
