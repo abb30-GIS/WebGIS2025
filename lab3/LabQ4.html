@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ <meta charset="utf-8" />
+ <title>Lab3: Web-based Mapping Using OpenLayers</title>
+ <script src="https://cdn.jsdelivr.net/npm/ol@v10.6.1/dist/ol.js"></script>
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.6.1/ol.css">
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol-layerswitcher@4.1.2/dist/ol-layerswitcher.css" />
+ <script src="https://cdn.jsdelivr.net/npm/ol-layerswitcher@4.1.2/dist/ol-layerswitcher.js"></script> 
+ </head>
+  
+  <body>
+ <h3>Lab3: Lab Question 4 Tasmania</h3>
+ <h4>Author: Austin B</h4>
+ <div id="map" class="map" style="width:800px; height:600px"></div>
+ 
+ <script>
+ // OSM
+ var OSM = new ol.layer.Tile({
+  title: 'OSM',
+  type: 'base',
+  visible: false,
+  source: new ol.source.OSM()
+ });
+
+ // Azure Maps Road
+  var AZURE_KEY = '1c71zTMToiYpZKfa5j5eHvoJR4ZflES8TBH6TI3disL9RqPoC0mYJQQJ99BJACYeBjFmNQNaAAAgAZMPNtSR'; // Key must be on the same line! No line breaks/spaces
+  var azureRoad = new ol.layer.Tile({
+   title: 'Azure Maps (Road)',
+   type: 'base',
+   visible: true,
+   source: new ol.source.XYZ({
+    url:
+     'https://atlas.microsoft.com/map/tile?api-version=2022-08-01&tilesetId=microsoft.terra.main&zoom={z}&x={x}&y={y}&subscription-key=' + AZURE_KEY,
+    crossOrigin: 'anonymous'
+  })
+ });
+
+ var baseGroup = new ol.layer.Group({
+  title: 'Base maps',
+  layers: [azureRoad, OSM]
+ });
+
+
+
+ var carriage = new ol.layer.Tile({
+  title: 'Carriageways',
+  source: new ol.source.TileWMS({
+     url: 'https://data.stategrowth.tas.gov.au/geoserver/ows',
+     params: {
+       'LAYERS': 'topp:ssg:GEO_CARRIAGEWAY',
+       'TILED': true,
+       'FORMAT': 'image/png',
+       'TRANSPARENT': true
+       },
+        serverType: 'geoserver',
+        transition: 0
+         })
+     });
+   
+ var cadastre = new ol.layer.Tile({
+  title: 'Cadastre Parcels',
+  source: new ol.source.TileWMS({
+     url: 'https://data.stategrowth.tas.gov.au/geoserver/ows',
+     params: {
+       'LAYERS': 'topp:pam:GEO_CADASTRE',
+       'TILED': true,
+       'FORMAT': 'image/png',
+       'TRANSPARENT': true
+       },
+        serverType: 'geoserver',
+        transition: 0
+         })
+     });
+   
+ var busLine = new ol.layer.Tile({
+  title: 'Bus Lines',
+  source: new ol.source.TileWMS({
+     url: 'https://data.stategrowth.tas.gov.au/geoserver/ows',
+     params: {
+       'LAYERS': 'topp:ssg:GEO_BRM_TRIP',
+       'TILED': true,
+       'FORMAT': 'image/png',
+       'TRANSPARENT': true
+       },
+        serverType: 'geoserver',
+        transition: 0
+         })
+     });
+
+
+   
+  var tasmaniaGroup = new ol.layer.Group({
+  title: 'Tasmania',
+  layers: [carriage, cadastre, busLine]
+ });  
+
+ var map = new ol.Map({
+  target: 'map',
+  layers: [baseGroup, tasmaniaGroup],
+  view: new ol.View({
+   center: [-10997148, 4569099],
+   zoom: 4
+  })
+ });
+  map.addControl(new ol.control.LayerSwitcher({ tipLabel: 'Legend' }));
+  </script>
+ </body>
+</html>
