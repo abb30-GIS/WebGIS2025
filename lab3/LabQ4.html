@@ -65,7 +65,7 @@
      params: {
        'LAYERS': 'pam:GEO_CADASTRE',
        'TILED': true,
-       'FORMAT': 'polygon',
+       'FORMAT': 'image/png',
        'TRANSPARENT': true
        },
         serverType: 'geoserver',
@@ -80,7 +80,7 @@
      params: {
        'LAYERS': 'ssg:GEO_BRM_TRIP',
        'TILED': true,
-       'FORMAT': 'line',
+       'FORMAT': 'image/png',
        'TRANSPARENT': true
        },
         serverType: 'geoserver',
@@ -99,8 +99,8 @@
   target: 'map',
   layers: [baseGroup, tasmaniaGroup],
   view: new ol.View({
-   center: [-4219568, 14655114],
-   zoom: 6
+   center: [14655114, -4219568],
+   zoom: 4
   })
  });
   map.addControl(new ol.control.LayerSwitcher({ tipLabel: 'Legend' }));
