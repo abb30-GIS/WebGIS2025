@@ -15,8 +15,23 @@
  source: new ol.source.OSM()
 });
 
+ var wms = new ol.layer.Tile({
+  title: 'States',
+  source: new ol.source.TileWMS({
+     url: 'https://ahocevar.com/geoserver/wms',
+     params: {
+       'LAYERS': 'topp:states',
+       'TILED': true,
+       'FORMAT': 'image/png',
+       'TRANSPARENT': true
+       },
+        serverType: 'geoserver',
+        transition: 0
+         })
+     });
+ 
 var map = new ol.Map({
- layers: [OSM],
+ layers: [OSM, wms],
  target: 'map',
  view: new ol.View({
  projection: 'EPSG:3857',
