@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Leaflet Basemap + Elevation + WMS</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="" crossorigin="" />
+  <style>
+    html,body { height:100%; margin:0; }
+    body { font-family: Arial, Helvetica, sans-serif; }
+    #map { width:100%; height:100vh; }
+    #controls {
+      padding: 10px;
+      background: rgba(255,255,255,0.95);
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+      z-index: 1000;
+      min-width: 180px;
+    }
+    #controls label { display:block; margin:6px 0; font-size:14px; }
+    #controls strong { display:block; margin-bottom:6px; }
+  </style>
+</head>
+<body>
+  <div id="controls" aria-label="Layer controls">
+    <strong>Basemap</strong>
+    <label><input type="radio" name="basemap" value="osm" checked> OpenStreetMap</label>
+    <label><input type="radio" name="basemap" value="esri"> ESRI Imagery</label>
+
+    <strong>Overlays</strong>
+    <label><input type="checkbox" id="wmsToggle" checked> WMS States</label>
+    <label><input type="checkbox" id="elevToggle" checked> Elevation (Terrarium)</label>
+  </div>
+
+  <div id="map" role="application" aria-label="Map"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // --- Basemap layers ---
+    const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap contributors'
+    });
+
+    const esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19,
+      attribution: 'Tiles © Esri'
+    });
+
+    // --- Overlay layers ---
+    // WMS: states layer from the example Geoserver
+    const wmsLayer = L.tileLayer.wms('https://ahocevar.com/geoserver/wms', {
+      layers: 'topp:states',
+      format: 'image/png',
+      transparent: true,
+      attribution: 'Geoserver example'
+    });
+
+    // Elevation: Terrarium tiles (RGB elevation encoded as 16-bit)
+    // Note: terrarium tiles return an RGB-encoded PNG where elevation = (R * 256 + G + B/256) - 32768
+    const elevation = L.tileLayer('https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png', {
+      maxZoom: 15,
+      attribution: 'Elevation tiles'
+    });
+
+    // --- Map initialization ---
+    const map = L.map('map', {
+      center: [39.8, -98.5], // continental US center
+      zoom: 4,
+      layers: [osm, wmsLayer, elevation]
+    });
+
+    // Ensure only one basemap visible at a time
+    function showBasemap(name) {
+      if (name === 'osm') {
+        if (!map.hasLayer(osm)) map.addLayer(osm);
+        if (map.hasLayer(esri)) map.removeLayer(esri);
+      } else {
+        if (!map.hasLayer(esri)) map.addLayer(esri);
+        if (map.hasLayer(osm)) map.removeLayer(osm);
+      }
+    }
+
+    // Wire up the basemap radios
+    document.querySelectorAll('input[name="basemap"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        showBasemap(e.target.value);
+      });
+    });
+
+    // Overlay toggles
+    document.getElementById('wmsToggle').addEventListener('change', (e) => {
+      if (e.target.checked) map.addLayer(wmsLayer);
+      else map.removeLayer(wmsLayer);
+    });
+
+    document.getElementById('elevToggle').addEventListener('change', (e) => {
+      if (e.target.checked) map.addLayer(elevation);
+      else map.removeLayer(elevation);
+    });
+
+    // Defensive: make sure HTML tags are properly closed (helps avoid document.write issues in some embed environments)
+    // No document.write used here. If embedding into another page, ensure string concatenation is not producing unescaped '</script>'.
+  </script>
+</body>
+</html>
