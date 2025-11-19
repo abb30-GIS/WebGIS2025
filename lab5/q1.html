@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leaflet Basemap Switcher + WMS</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; }
+    #map { width: 100vw; height: 90vh; }
+    #controls {
+      padding: 10px;
+      background: #ffffffdd;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      z-index: 1000;
+    }
+    #controls label { margin-right: 10px; }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <strong>Basemap:</strong>
+    <label><input type="radio" name="basemap" value="osm" checked> OSM</label>
+    <label><input type="radio" name="basemap" value="esri"> ESRI Imagery</label>
+
+    <strong style="margin-left:20px">Layers:</strong>
+    <label><input type="checkbox" id="wmsToggle" checked> WMS States</label>
+  </div>
+
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // Basemaps
+    const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19
+    });
+
+    const esri = L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19
+    });
+
+    // WMS layer
+    const wmsLayer = L.tileLayer.wms('https://ahocevar.com/geoserver/wms', {
+      layers: 'topp:states',
+      format: 'image/png',
+      transparent: true
+    });
+
+    // Map
+    const map = L.map('map', {
+      center: [39.8, -98.5],
+      zoom: 4,
+      layers: [osm, wmsLayer]
+    });
+
+    // Basemap switcher
+    document.querySelectorAll('input[name="basemap"]').forEach((radio) => {
+      radio.addEventListener('change', () => {
+        if (radio.value === 'osm') {
+          map.addLayer(osm);
+          map.removeLayer(esri);
+        } else {
+          map.addLayer(esri);
+          map.removeLayer(osm);
+        }
+      });
+    });
+
+    // WMS toggle
+    document.getElementById('wmsToggle').addEventListener('change', (e) => {
+      if (e.target.checked) {
+        map.addLayer(wmsLayer);
+      } else {
+        map.removeLayer(wmsLayer);
+      }
+    });
+  </script>
+</body>
+</html>
