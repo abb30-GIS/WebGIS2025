@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <title>OpenLayers Basemap Switcher with WMS</title>
-  <!-- Correct OpenLayers CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/ol/ol.css">
+  <!-- Other head elements -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/css/ol.css" type="text/css">
+  <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
   <style>
     body { margin: 0; font-family: Arial, sans-serif; }
     #map { width: 100%; height: 90vh; }
@@ -24,8 +25,6 @@
   </div>
   <div id="map"></div>
 
-  <!-- Correct OpenLayers JS -->
-  <script src="https://unpkg.com/ol/ol.js"></script>
   <script>
     // OSM basemap
     const osmLayer = new ol.layer.Tile({
