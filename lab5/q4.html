@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>OpenLayers Basemap Switcher with WMS : copilot</title>
+  <title>OpenLayers Basemap Switcher with WMS</title>
   <!-- Correct OpenLayers CSS -->
   <link rel="stylesheet" href="https://unpkg.com/ol/ol.css">
   <style>
@@ -43,11 +43,16 @@
       visible: false
     });
 
-    // WMS layer
+    // WMS layer (topp:states)
     const wmsLayer = new ol.layer.Tile({
       source: new ol.source.TileWMS({
         url: 'https://ahocevar.com/geoserver/wms',
-        params: { 'LAYERS': 'topp:states', 'TILED': true },
+        params: {
+          'LAYERS': 'topp:states',
+          'STYLES': '',
+          'SRS': 'EPSG:4326',
+          'FORMAT': 'image/png'
+        },
         serverType: 'geoserver'
       }),
       visible: true
@@ -58,7 +63,7 @@
       target: 'map',
       layers: [osmLayer, esriLayer, wmsLayer],
       view: new ol.View({
-        center: ol.proj.fromLonLat([-98.5, 39.8]), // continental US
+        center: ol.proj.fromLonLat([-98.5, 39.8]), // continental US center
         zoom: 4
       }),
       renderer: 'canvas'
