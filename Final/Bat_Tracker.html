@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Bat Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@latest/ol.css" />
+  <style>
+    :root{--bg:#0f172a;--panel:#020617;--border:#1e293b;--text:#e5e7eb;--muted:#94a3b8;--btn:#1e293b;--btn-on:#2563eb}
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0}
+    body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);display:flex;height:100vh}
+    #map{flex:1;min-height:0}
+    .legend{width:360px;background:var(--panel);border-left:1px solid var(--border);padding:16px;overflow:auto}
+    .legend h2{margin:0 0 12px;font-size:1.05rem}
+    .legend-item{display:flex;align-items:flex-start;margin-bottom:14px;color:var(--muted);font-size:0.9rem}
+    .swatch{width:14px;height:14px;margin-right:10px;border-radius:3px;margin-top:3px}
+    .toggle-btn{margin-left:auto;background:var(--btn);border:1px solid var(--border);color:#e5e7eb;border-radius:4px;padding:4px 8px;font-size:0.75rem;cursor:pointer}
+    .toggle-btn.on{background:var(--btn-on)}
+    .toggle-btn.off{opacity:0.6}
+    .ol-control button{background:rgba(0,0,0,0.45);color:#fff;border-radius:4px}
+    .notice{font-size:0.85rem;color:var(--muted);margin-top:8px}
+    .ol-popup{position:absolute;background:#020617;color:#e5e7eb;border:1px solid #1e293b;border-radius:6px;padding:10px 12px;font-size:0.85rem;min-width:220px;box-shadow:0 10px 30px rgba(0,0,0,0.4);z-index:1000}
+    .ol-popup-closer{position:absolute;top:6px;right:8px;cursor:pointer;color:#94a3b8}
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <div id="popup" class="ol-popup" style="display:none">
+    <div id="popup-closer" class="ol-popup-closer" title="Close">✕</div>
+    <div id="popup-content"></div>
+  </div>
+
+  <aside class="legend">
+    <h2>Species</h2>
+
+    <div class="legend-item" data-species="Corynorhinus townsendii virginianus">
+      <div class="swatch" style="background:#22c55e"></div>
+      <div style="flex:1">
+        <div>Corynorhinus townsendii virginianus</div>
+        <div style="font-size:0.8em;color:#94a3b8">Virginia Big-eared Bat</div>
+        <a href="https://ecos.fws.gov/ecp/species/8369" target="_blank" style="font-size:0.8em;color:#60a5fa">More information</a>
+      </div>
+      <button class="toggle-btn on">On</button>
+    </div>
+
+    <div class="legend-item" data-species="Myotis grisescens">
+      <div class="swatch" style="background:#3b82f6"></div>
+      <div style="flex:1">
+        <div>Myotis grisescens</div>
+        <div style="font-size:0.8em;color:#94a3b8">Gray Bat</div>
+        <a href="https://ecos.fws.gov/ecp/species/6329" target="_blank" style="font-size:0.8em;color:#60a5fa">More information</a>
+      </div>
+      <button class="toggle-btn on">On</button>
+    </div>
+
+    <div class="legend-item" data-species="Myotis sodalis">
+      <div class="swatch" style="background:#f59e0b"></div>
+      <div style="flex:1">
+        <div>Myotis sodalis</div>
+        <div style="font-size:0.8em;color:#94a3b8">Indiana Bat</div>
+        <a href="https://ecos.fws.gov/ecp/species/5949" target="_blank" style="font-size:0.8em;color:#60a5fa">More information</a>
+      </div>
+      <button class="toggle-btn on">On</button>
+    </div>
+
+    <div class="legend-item" data-species="Myotis septentrionalis">
+      <div class="swatch" style="background:#ef4444"></div>
+      <div style="flex:1">
+        <div>Myotis septentrionalis</div>
+        <div style="font-size:0.8em;color:#94a3b8">Northern Long-eared Bat</div>
+        <a href="https://ecos.fws.gov/ecp/species/9045" target="_blank" style="font-size:0.8em;color:#60a5fa">More information</a>
+      </div>
+      <button class="toggle-btn on">On</button>
+    </div>
+
+    <div id="status" class="notice">Status: initializing…</div>
+  </aside>
+
+  <script src="https://cdn.jsdelivr.net/npm/ol@latest/dist/ol.js"></script>
+  <script>
+  (function(){
+    if(window._ol_gbif_inited) return; window._ol_gbif_inited=true;
+
+    const STATUS_EL = document.getElementById('status');
+    function setStatus(s){ if(STATUS_EL) STATUS_EL.textContent = 'Status: '+s; console.log(s); }
+
+    const SPECIES_COLORS = {
+      'Corynorhinus townsendii virginianus':'#22c55e',
+      'Myotis grisescens':'#3b82f6',
+      'Myotis sodalis':'#f59e0b',
+      'Myotis septentrionalis':'#ef4444'
+    };
+    const SPECIES_COMMON = {
+      'Corynorhinus townsendii virginianus':'Virginia Big-eared Bat',
+      'Myotis grisescens':'Gray Bat',
+      'Myotis sodalis':'Indiana Bat',
+      'Myotis septentrionalis':'Northern Long-eared Bat'
+    };
+
+    const SPECIES_ENABLED = Object.fromEntries(Object.keys(SPECIES_COLORS).map(k=>[k,true]));
+
+    function normalizeSpeciesName(raw=''){
+      if(!raw) return null;
+      for(const k of Object.keys(SPECIES_COLORS)) if(raw.startsWith(k)) return k;
+      return null;
+    }
+
+    // Base layer
+    const baseLayer = new ol.layer.Tile({ source:new ol.source.XYZ({ url:'https://{a-c}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png' }) });
+
+    // Per-species sources, clusters, layers
+    const pointSources = {};
+    const clusterLayers = {};
+
+    Object.keys(SPECIES_COLORS).forEach(sp=>{
+      const src = new ol.source.Vector();
+      const clusterSrc = new ol.source.Cluster({ distance: 40, source: src });
+
+      const layer = new ol.layer.Vector({
+        source: clusterSrc,
+        style: clusterFeature => {
+          // If species is toggled off, don't render its layer
+          if(!SPECIES_ENABLED[sp]) return null;
+          const feats = clusterFeature.get('features') || [];
+          if(feats.length===0) return null;
+
+          if(feats.length===1){
+            return new ol.style.Style({ image:new ol.style.Circle({ radius:6, fill:new ol.style.Fill({ color: SPECIES_COLORS[sp] }), stroke:new ol.style.Stroke({ color:'#fff', width:0.8 }) }) });
+          }
+
+          const r = Math.min(8 + Math.log(feats.length+1)*4, 28);
+          return new ol.style.Style({ image:new ol.style.Circle({ radius:r, fill:new ol.style.Fill({ color: SPECIES_COLORS[sp] }), stroke:new ol.style.Stroke({ color:'#fff', width:1 }) }), text:new ol.style.Text({ text:String(feats.length), fill:new ol.style.Fill({ color:'#fff' }), font:'bold 12px system-ui' }) });
+        }
+      });
+
+      pointSources[sp]=src;
+      clusterLayers[sp]=layer;
+    });
+
+    // Map
+    const map = new ol.Map({ target:'map', layers:[ baseLayer, ...Object.values(clusterLayers) ], controls:[ new ol.control.Zoom(), new ol.control.Attribution({ collapsed:true }) ], view:new ol.View({ projection:'EPSG:3857' }) });
+
+    const conusExtent = ol.proj.transformExtent([-125,24,-66.5,49.5],'EPSG:4326','EPSG:3857');
+    map.getView().fit(conusExtent,{ padding:[20,20,20,20], duration:0 });
+    window._ol_gbif_map = map; window._ol_gbif_conusExtent = conusExtent;
+
+    // Legend toggles - set layer visibility when toggled
+    document.querySelectorAll('.legend-item').forEach(item=>{
+      const sp = item.dataset.species;
+      const btn = item.querySelector('.toggle-btn');
+      btn.addEventListener('click', ()=>{
+        SPECIES_ENABLED[sp] = !SPECIES_ENABLED[sp];
+        btn.textContent = SPECIES_ENABLED[sp] ? 'On' : 'Off';
+        btn.classList.toggle('on', SPECIES_ENABLED[sp]);
+        btn.classList.toggle('off', !SPECIES_ENABLED[sp]);
+        const layer = clusterLayers[sp];
+        if(layer) layer.setVisible(SPECIES_ENABLED[sp]);
+      });
+    });
+
+    // Popup
+    const popupEl = document.getElementById('popup');
+    const popupContent = document.getElementById('popup-content');
+    const popupCloser = document.getElementById('popup-closer');
+    const popupOverlay = new ol.Overlay({ element: popupEl, positioning:'bottom-center', offset:[0,-10], stopEvent:true });
+    map.addOverlay(popupOverlay);
+
+    map.on('singleclick', evt=>{
+      popupOverlay.setPosition(undefined); popupEl.style.display='none';
+      map.forEachFeatureAtPixel(evt.pixel, (feat)=>{
+        const features = feat.get('features') || [];
+        if(features.length !== 1) return; // only show popup for single points
+        const f = features[0];
+        const sci = f.get('scientificName') || 'Unknown';
+        const canonical = normalizeSpeciesName(sci) || sci;
+        const common = SPECIES_COMMON[canonical] || '—';
+        const year = f.get('year') || '—';
+        const gbifId = f.get('gbifId') || '—';
+        popupContent.innerHTML = `<strong>${sci}</strong><br/><em>${common}</em><div style="margin-top:6px">Year: ${year}</div><div>GBIF ID: ${gbifId}</div>`;
+        popupOverlay.setPosition(f.getGeometry().getCoordinates()); popupEl.style.display='block';
+      });
+    });
+    popupCloser.onclick = ()=>{ popupOverlay.setPosition(undefined); popupEl.style.display='none'; };
+
+    // Add feature helper
+    function addFeatureToSpecies(sp, lon, lat, props){
+      const src = pointSources[sp]; if(!src) return; const feature = new ol.Feature({ geometry:new ol.geom.Point(ol.proj.fromLonLat([lon,lat])) }); feature.setProperties(props); src.addFeature(feature); }
+
+    // Load GBIF per-species (sequential, US only)
+    async function loadGbifForSpecies(sp, limit=300){
+      try{
+        setStatus(`loading ${sp} from GBIF`);
+        const url = new URL('https://api.gbif.org/v1/occurrence/search');
+        url.searchParams.set('scientificName', sp);
+        url.searchParams.set('hasCoordinate','true');
+        url.searchParams.set('hasGeospatialIssue','false');
+        url.searchParams.set('country','US');
+        url.searchParams.set('limit', String(limit));
+
+        const res = await fetch(url.toString());
+        if(!res.ok){ setStatus(`GBIF error ${res.status} for ${sp}`); return 0; }
+        const j = await res.json(); const results = Array.isArray(j.results)?j.results:[];
+        let added=0;
+        for(const r of results){
+          const lon=r.decimalLongitude, lat=r.decimalLatitude;
+          if(typeof lon!=='number' || typeof lat!=='number') continue;
+          addFeatureToSpecies(sp, lon, lat, { scientificName: r.scientificName || sp, year: r.year || null, gbifId: r.key || null });
+          added++;
+        }
+        setStatus(`loaded ${added} occurrences for ${sp}`);
+        // ensure layer visible if enabled
+        if(clusterLayers[sp]) clusterLayers[sp].setVisible(SPECIES_ENABLED[sp]);
+        return added;
+      }catch(err){ console.warn('GBIF fetch failed for', sp, err); setStatus(`fetch failed for ${sp}`); return 0; }
+    }
+
+    // Load all species sequentially; show fallback if none loaded
+    (async ()=>{
+      const speciesList = Object.keys(SPECIES_COLORS);
+      let total=0;
+      for(const sp of speciesList){
+        const n = await loadGbifForSpecies(sp, 300);
+        total += n;
+        // small delay to be nice to the API
+        await new Promise(r=>setTimeout(r,120));
+      }
+      if(total===0){
+        setStatus('No GBIF records loaded — using fallback sample points');
+        // fallback: one sample per species so UI is testable
+        speciesList.forEach((sp,i)=> addFeatureToSpecies(sp, -95 + i*3, 38 + i*1.2, { scientificName: sp, year: 2000 + i }));
+      } else setStatus(`Loaded total ${total} occurrences`);
+    })();
+
+    // Tests
+    console.assert(Object.keys(SPECIES_COLORS).length===4,'expected 4 species');
+    console.assert(Object.keys(pointSources).length===Object.keys(SPECIES_COLORS).length,'pointSources length match species');
+
+  })();
+  </script>
+</body>
+</html>
