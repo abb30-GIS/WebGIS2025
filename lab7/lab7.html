@@ -1,12 +1,12 @@
 <html>
 <head>
- <title>Lab3: Web-based Mapping Using OpenLayers</title>
+ <title>Lab 7 </title>
  <script src="https://cdn.jsdelivr.net/npm/ol@v10.6.1/dist/ol.js"></script>
  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.6.1/ol.css">
 </head>
 
 <body>
-<h3>Lab3: Question 3</h3>
+<h3>Lab 7</h3>
 <h4>Author: Austin B </h4>
 <div id="map" class="map", style = "width:800px; height: 600px"></div>
 <script>
@@ -16,7 +16,7 @@
 });
 
  var wms = new ol.layer.Tile({
-  title: 'States',
+  title: 'Santee Features',
   source: new ol.source.TileWMS({
      url: 'http://18.117.131.204:8080/geoserver/wms',
      params: {
