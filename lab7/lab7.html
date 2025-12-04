@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>OpenLayers – Santee Experimental Forest</title>
+
+  <!-- OpenLayers -->
+  <script src="https://cdn.jsdelivr.net/npm/ol@v10.6.1/dist/ol.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.6.1/ol.css" />
+
+  <style>
+    /* Light mode styling */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #ffffff;
+      color: #111827;
+    }
+
+    header {
+      padding: 10px 14px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    #map {
+      width: 100%;
+      height: calc(100% - 70px);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h3>Santee Experimental Forest</h3>
+    <p>Berkeley County, South Carolina, USA</p>
+  </header>
+
+  <div id="map"></div>
+
+  <script>
+    // Base map (OpenStreetMap – light by default)
+    const osm = new ol.layer.Tile({
+      source: new ol.source.OSM()
+    });
+
+    // Approximate center of Santee Experimental Forest (lon, lat)
+    const santeeLonLat = [-79.81, 33.15];
+
+    // Create map
+    const map = new ol.Map({
+      target: 'map',
+      layers: [osm],
+      view: new ol.View({
+        projection: 'EPSG:3857',
+        center: ol.proj.fromLonLat(santeeLonLat),
+        zoom: 12
+      })
+    });
+
+      const markerLayer = new ol.layer.Vector({
+      source: new ol.source.Vector({
+        features: [marker]
+      }),
+      style: new ol.style.Style({
+        image: new ol.style.Circle({
+          radius: 6,
+          fill: new ol.style.Fill({ color: '#2563eb' }),
+          stroke: new ol.style.Stroke({ color: '#ffffff', width: 2 })
+        })
+      })
+    });
+
+    map.addLayer(markerLayer);
+  </script>
+
+</body>
+</html>
