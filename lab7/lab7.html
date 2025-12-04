@@ -1,79 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="utf-8" />
-  <title>OpenLayers – Santee Experimental Forest</title>
-
-  <!-- OpenLayers -->
-  <script src="https://cdn.jsdelivr.net/npm/ol@v10.6.1/dist/ol.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.6.1/ol.css" />
-
-  <style>
-    /* Light mode styling */
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #ffffff;
-      color: #111827;
-    }
-
-    header {
-      padding: 10px 14px;
-      border-bottom: 1px solid #e5e7eb;
-    }
-
-    #map {
-      width: 100%;
-      height: calc(100% - 70px);
-    }
-  </style>
+ <title>Lab3: Web-based Mapping Using OpenLayers</title>
+ <script src="https://cdn.jsdelivr.net/npm/ol@v10.6.1/dist/ol.js"></script>
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.6.1/ol.css">
 </head>
+
 <body>
+<h3>Lab3: Question 3</h3>
+<h4>Author: Austin B </h4>
+<div id="map" class="map", style = "width:800px; height: 600px"></div>
+<script>
 
-  <header>
-    <h3>Santee Experimental Forest</h3>
-    <p>Berkeley County, South Carolina, USA</p>
-  </header>
+  var OSM = new ol.layer.Tile({
+ source: new ol.source.OSM()
+});
 
-  <div id="map"></div>
+ var wms = new ol.layer.Tile({
+  title: 'States',
+  source: new ol.source.TileWMS({
+     url: 'http://18.117.131.204:8080/geoserver/wms',
+     params: {
+       'LAYERS': 'abarbe30:sef_boundary',
+       'TILED': true,
+       'FORMAT': 'image/png',
+       'TRANSPARENT': False
+       },
+        serverType: 'geoserver',
+        transition: 0
+         })
+     });
+ 
+var map = new ol.Map({
+ layers: [OSM, wms],
+ target: 'map',
+ view: new ol.View({
+ projection: 'EPSG:3857',
+ // Initial center remains near the US center, but will be overridden by the .fit() call
+ center: [-10997148, 4569099],
+ zoom: 4
+ })
+ });
 
-  <script>
-    // Base map (OpenStreetMap – light by default)
-    const osm = new ol.layer.Tile({
-      source: new ol.source.OSM()
-    });
+// 📌 New Extent: Santee Experimental Forest (South Carolina)
+// [minX (Lon), minY (Lat), maxX (Lon), maxY (Lat)] in EPSG:4326
+var santeeExtent4326 = [-80.12, 33.02, -79.91, 33.26]; 
+var santeeExtent3857 = ol.proj.transformExtent(santeeExtent4326, 'EPSG:4326', 'EPSG:3857');
 
-    // Approximate center of Santee Experimental Forest (lon, lat)
-    const santeeLonLat = [-79.81, 33.15];
-
-    // Create map
-    const map = new ol.Map({
-      target: 'map',
-      layers: [osm],
-      view: new ol.View({
-        projection: 'EPSG:3857',
-        center: ol.proj.fromLonLat(santeeLonLat),
-        zoom: 12
-      })
-    });
-
-      const markerLayer = new ol.layer.Vector({
-      source: new ol.source.Vector({
-        features: [marker]
-      }),
-      style: new ol.style.Style({
-        image: new ol.style.Circle({
-          radius: 6,
-          fill: new ol.style.Fill({ color: '#2563eb' }),
-          stroke: new ol.style.Stroke({ color: '#ffffff', width: 2 })
-        })
-      })
-    });
-
-    map.addLayer(markerLayer);
-  </script>
-
+// The map view is updated to fit the new extent
+map.getView().fit(santeeExtent3857, {
+ size: map.getSize(),
+ padding: [20, 20, 20, 20],
+ duration: 300
+});
+  
+</script>
 </body>
 </html>
